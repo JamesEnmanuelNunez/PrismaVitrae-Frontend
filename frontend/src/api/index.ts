@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { Candidato, Propuesta, Reajuste, NoProcede } from '../types';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
 });
 
 // Candidatos
