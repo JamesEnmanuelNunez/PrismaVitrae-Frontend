@@ -5,6 +5,23 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
 });
 
+import { supabase } from '../lib/supabase';
+
+// Este interceptor atrapa TODAS las peticiones antes de salir
+api.interceptors.request.use(
+  async (config) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (session?.access_token) {
+      config.headers.Authorization = `Bearer ${session.access_token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // Candidatos
 export const candidatosApi = {
   list: (offset = 0, limit = 20) =>
