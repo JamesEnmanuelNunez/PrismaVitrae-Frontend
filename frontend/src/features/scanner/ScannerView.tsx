@@ -13,10 +13,12 @@ interface ArchivoEnCola {
   status: 'subiendo' | 'procesando' | 'exito' | 'error';
   error?: string;
   candidato?: Candidato;
+  fileObject: File;
 }
 
 export function ScannerView() {
   const [archivos, setArchivos] = useState<ArchivoEnCola[]>([]);
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
 
   const handleDrop = useCallback(async (nuevosArchivos: File[]) => {
     const nuevos: ArchivoEnCola[] = nuevosArchivos.map((f) => ({
@@ -24,20 +26,18 @@ export function ScannerView() {
       name: f.name,
       size: f.size,
       status: 'subiendo' as const,
+      fileObject: f,
     }));
 
     setArchivos((prev) => [...nuevos, ...prev]);
 
     for (const archivo of nuevos) {
-      const file = nuevosArchivos.find((f) => f.name === archivo.name);
-      if (!file) continue;
-
       setArchivos((prev) =>
         prev.map((a) => (a.id === archivo.id ? { ...a, status: 'procesando' } : a))
       );
 
       try {
-        const candidato = await scannerApi.scan(file);
+        const candidato = await scannerApi.scan(archivo.fileObject);
         setArchivos((prev) =>
           prev.map((a) =>
             a.id === archivo.id ? { ...a, status: 'exito', candidato } : a
@@ -80,7 +80,7 @@ export function ScannerView() {
   }, [archivos]);
 
   return (
-    <div className="flex-1 flex flex-col h-screen overflow-hidden">
+    <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
       <header className="w-full h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-10 sticky top-0 z-10">
         <div className="flex items-center">
           <span className="font-headline-md text-[24px] leading-[32px] tracking-[-0.01em] font-bold text-on-surface">
@@ -126,6 +126,7 @@ export function ScannerView() {
                   key={archivo.id}
                   file={archivo}
                   onRetry={handleRetry}
+                  onPreview={() => setPreviewFile(archivo.fileObject)}
                 />
               ))}
               {archivos.length === 0 && (
@@ -140,6 +141,42 @@ export function ScannerView() {
           </div>
         </div>
       </div>
+
+      {previewFile && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setPreviewFile(null)}>
+          <div 
+            className="bg-surface rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-outline-variant">
+              <h3 className="font-headline-sm text-on-surface truncate">{previewFile.name}</h3>
+              <button 
+                onClick={() => setPreviewFile(null)}
+                className="p-2 hover:bg-surface-container rounded-full text-on-surface-variant transition-colors"
+              >
+                <Icon name="close" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto bg-surface-container-lowest p-4 flex items-center justify-center min-h-[400px]">
+              {previewFile.type === 'application/pdf' ? (
+                <iframe 
+                  src={URL.createObjectURL(previewFile)} 
+                  className="w-full h-[70vh] border-0 rounded"
+                  title="PDF Preview"
+                />
+              ) : previewFile.type.startsWith('image/') ? (
+                <img 
+                  src={URL.createObjectURL(previewFile)} 
+                  alt="Preview" 
+                  className="max-w-full max-h-[70vh] object-contain rounded"
+                />
+              ) : (
+                <p className="text-secondary">Vista previa no disponible para este tipo de archivo.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

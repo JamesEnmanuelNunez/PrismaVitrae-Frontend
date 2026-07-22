@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Icon } from '../../components/ui/Icon';
 import type { Candidato } from '../../types';
 
@@ -9,9 +10,11 @@ interface UploadItemProps {
     status: 'subiendo' | 'procesando' | 'exito' | 'error';
     error?: string;
     candidato?: Candidato;
+    fileObject: File;
   };
   onViewData?: (candidato: Candidato) => void;
   onRetry?: (id: string) => void;
+  onPreview?: () => void;
 }
 
 function formatTamano(bytes: number): string {
@@ -20,7 +23,17 @@ function formatTamano(bytes: number): string {
   return `${bytes} B`;
 }
 
-export function UploadItem({ file, onViewData, onRetry }: UploadItemProps) {
+export function UploadItem({ file, onViewData, onRetry, onPreview }: UploadItemProps) {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (file.fileObject && file.fileObject.type.startsWith('image/')) {
+      const url = URL.createObjectURL(file.fileObject);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [file.fileObject]);
+
   const config = {
     procesando: {
       iconBg: 'bg-secondary-container/30',
@@ -62,11 +75,27 @@ export function UploadItem({ file, onViewData, onRetry }: UploadItemProps) {
 
   return (
     <div className="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 flex items-center gap-4 hover:border-outline transition-colors">
-      <div className={`w-10 h-10 rounded ${cfg.iconBg} flex items-center justify-center ${cfg.iconColor} flex-shrink-0`}>
-        <Icon name={getIcono()} size={20} />
+      <div 
+        className={`w-10 h-10 rounded ${cfg.iconBg} flex items-center justify-center ${cfg.iconColor} flex-shrink-0 overflow-hidden relative group ${onPreview ? 'cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all' : ''}`}
+        onClick={onPreview}
+        title="Ver previsualización"
+      >
+        {previewUrl ? (
+          <>
+            <img src={previewUrl} alt="Thumbnail" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center">
+              <Icon name="visibility" size={16} className="text-white" />
+            </div>
+          </>
+        ) : (
+          <Icon name={getIcono()} size={20} />
+        )}
       </div>
-      <div className="flex-1 min-w-0">
-        <h4 className="font-body-md text-[16px] leading-[24px] font-medium text-on-surface truncate">
+      <div 
+        className={`flex-1 min-w-0 ${onPreview ? 'cursor-pointer group' : ''}`}
+        onClick={onPreview}
+      >
+        <h4 className={`font-body-md text-[16px] leading-[24px] font-medium text-on-surface truncate ${onPreview ? 'group-hover:text-primary transition-colors' : ''}`}>
           {file.name}
         </h4>
         <div className="flex items-center gap-2 mt-1">
