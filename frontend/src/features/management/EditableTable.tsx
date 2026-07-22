@@ -4,7 +4,7 @@ import { candidatosApi } from '../../api';
 import type { Candidato } from '../../types';
 import { ModalEdicion } from './ModalEdicion';
 
-function MenuAcciones({ candidato, onEditar }: { candidato: Candidato; onEditar: (c: Candidato) => void }) {
+function MenuAcciones({ candidato, onEditar, onEliminar }: { candidato: Candidato; onEditar: (c: Candidato) => void; onEliminar: (c: Candidato) => void }) {
   const [abierto, setAbierto] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -53,6 +53,7 @@ function MenuAcciones({ candidato, onEditar }: { candidato: Candidato; onEditar:
           <button
             onClick={() => {
               setAbierto(false);
+              onEliminar(candidato);
             }}
             className="w-full flex items-center gap-3 px-4 py-2 text-error hover:bg-error-container/30 transition-colors text-left"
           >
@@ -119,6 +120,18 @@ export function EditableTable() {
     }
   };
 
+  const handleEliminar = async (candidato: Candidato) => {
+    if (window.confirm(`¿Estás seguro de que deseas eliminar a ${candidato.nombre}? Esta acción no se puede deshacer.`)) {
+      try {
+        await candidatosApi.delete(candidato.id);
+        await cargarDatos();
+      } catch (err) {
+        console.error('Error al eliminar:', err);
+        alert('Hubo un error al intentar eliminar el candidato.');
+      }
+    }
+  };
+
   if (cargando) {
     return (
       <div className="flex items-center justify-center p-16">
@@ -182,7 +195,7 @@ export function EditableTable() {
                   return (
                     <tr key={c.id} className="group hover:bg-surface-container-low transition-colors">
                       <td className="py-2 px-2">
-                        <MenuAcciones candidato={c} onEditar={setCandidatoEditando} />
+                        <MenuAcciones candidato={c} onEditar={setCandidatoEditando} onEliminar={handleEliminar} />
                       </td>
                       <td className="py-2 px-2">{(dc.no as number) || '-'}</td>
                       <td className="py-2 px-2 font-medium">{c.nombre}</td>
