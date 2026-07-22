@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@theme {
+  --color-tertiary: #8a5100;
+  --color-background: #faf8ff;
+  --color-tertiary-container: #de8712;
+  --color-secondary: #505f76;
+  --color-on-primary-fixed: #001e2f;
+  --color-error: #ba1a1a;
+  --color-surface-tint: #006591;
+  --color-error-container: #ffdad6;
+  --color-on-tertiary-fixed: #2c1600;
+  --color-surface-container-highest: #dae2fd;
+  --color-surface-container: #eaedff;
+  --color-outline: #6e7881;
+  --color-inverse-surface: #283044;
+  --color-inverse-primary: #89ceff;
+  --color-surface-container-low: #f2f3ff;
+  --color-tertiary-fixed: #ffdcbd;
+  --color-tertiary-fixed-dim: #ffb86e;
+  --color-on-primary: #ffffff;
+  --color-surface-container-high: #e2e7ff;
+  --color-surface: #faf8ff;
+  --color-on-tertiary: #ffffff;
+  --color-surface-variant: #dae2fd;
+  --color-on-surface-variant: #3e4850;
+  --color-on-secondary-container: #54647a;
+  --color-primary: #006591;
+  --color-on-surface: #131b2e;
+  --color-on-secondary-fixed-variant: #38485d;
+  --color-outline-variant: #bec8d2;
+  --color-on-secondary-fixed: #0b1c30;
+  --color-primary-fixed-dim: #89ceff;
+  --color-on-secondary: #ffffff;
+  --color-secondary-fixed-dim: #b7c8e1;
+  --color-surface-bright: #faf8ff;
+  --color-inverse-on-surface: #eef0ff;
+  --color-on-error: #ffffff;
+  --color-secondary-container: #d0e1fb;
+  --color-surface-dim: #d2d9f4;
+  --color-on-primary-container: #003751;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-error-container: #93000a;
+  --color-on-tertiary-container: #4d2b00;
+  --color-primary-fixed: #c9e6ff;
+  --color-on-primary-fixed-variant: #004c6e;
+  --color-on-background: #131b2e;
+  --color-secondary-fixed: #d3e4fe;
+  --color-on-tertiary-fixed-variant: #693c00;
+  --color-primary-container: #0ea5e9;
+
+  --font-headline-lg-mobile: "Inter";
+  --font-headline-md: "Inter";
+  --font-body-sm: "Inter";
+  --font-label-md: "Inter";
+  --font-headline-lg: "Inter";
+  --font-display-lg: "Inter";
+  --font-code-sm: "Inter";
+  --font-body-md: "Inter";
+  --font-body-lg: "Inter";
+
+  --text-headline-lg-mobile: 24px;
+  --text-headline-md: 24px;
+  --text-body-sm: 14px;
+  --text-label-md: 12px;
+  --text-headline-lg: 32px;
+  --text-display-lg: 48px;
+  --text-code-sm: 13px;
+  --text-body-md: 16px;
+  --text-body-lg: 18px;
+
+  --radius-sm: 0.25rem;
+  --radius-DEFAULT: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  --animate-subtle-pulse: subtle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+}
+
+.editable-cell {
+  position: relative;
+  transition: background-color 0.15s ease;
+}
+.editable-cell:hover {
+  background-color: var(--color-surface-container-high);
+  cursor: text;
+}
+.editable-cell .edit-icon {
+  opacity: 0;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: opacity 0.15s ease;
+}
+.editable-cell:hover .edit-icon {
+  opacity: 1;
+}
+.editable-cell:focus-within {
+  background-color: var(--color-surface-container-lowest);
+  box-shadow: inset 0 0 0 2px var(--color-primary-container);
+  border-radius: var(--radius-DEFAULT);
+  z-index: 10;
+}
