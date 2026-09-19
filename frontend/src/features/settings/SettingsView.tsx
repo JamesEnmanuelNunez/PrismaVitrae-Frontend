@@ -1,26 +1,10 @@
 import { Icon } from '../../components/ui/Icon';
+import { TopBar } from '../../components/layout/TopBar';
 
 export function SettingsView() {
   return (
     <div className="flex-1 flex flex-col h-screen overflow-hidden">
-      <header className="w-full h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-10 sticky top-0 z-10">
-        <div className="flex items-center">
-          <span className="font-headline-md text-[24px] leading-[32px] tracking-[-0.01em] font-bold text-on-surface">
-            Configuración del Sistema
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <button className="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer duration-150">
-            <Icon name="notifications" />
-          </button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer duration-150">
-            <Icon name="help_outline" />
-          </button>
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant cursor-pointer ml-2 bg-primary-container flex items-center justify-center">
-            <span className="font-label-md text-[12px] leading-[16px] text-on-primary-container font-bold">PV</span>
-          </div>
-        </div>
-      </header>
+      <TopBar title="Configuración del Sistema" />
 
       <main className="flex-1 flex items-center justify-center p-10 md:p-12">
         <div className="w-full max-w-4xl flex flex-col items-center justify-center text-center">
