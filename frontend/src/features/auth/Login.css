@@ -339,9 +339,10 @@ input::placeholder {
 
 .toggle-password {
   position: absolute;
-  right: 12px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
+  width: auto;
   background: transparent;
   border: none;
   cursor: pointer;
