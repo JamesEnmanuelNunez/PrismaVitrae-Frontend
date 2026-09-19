@@ -279,7 +279,7 @@
 }
 
 .form {
-  padding: 0px 18px;
+  padding: 0px 18px 18px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -330,28 +330,34 @@ input::placeholder {
 
 .password-wrapper {
   position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .password-wrapper input {
   width: 100%;
   padding-right: 50px;
+  box-sizing: border-box;
 }
 
 .toggle-password {
   position: absolute;
-  right: 14px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  width: auto;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: auto;
-  border-radius: 0;
+  border-radius: 8px;
+  z-index: 2;
 }
 
 .toggle-password img {
@@ -472,7 +478,7 @@ input::placeholder {
     padding-left: 50px;
     padding-right: 50px;
     padding-top: 0;
-    padding-bottom: 0;
+    padding-bottom: 18px;
   }
 
   .socials {
@@ -491,6 +497,6 @@ input::placeholder {
   }
 
   .form {
-    padding: 0 30px;
+    padding: 0 30px 18px;
   }
 }
